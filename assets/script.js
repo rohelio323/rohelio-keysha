@@ -84,42 +84,77 @@
   function showDim() { if (fireworkDim) fireworkDim.classList.add('is-active'); }
   function hideDim() { if (fireworkDim) fireworkDim.classList.remove('is-active'); }
 
-  function launchRocket(x0, y0, x1, y1, onArrive) {
+  function spawnTrailSpark(x, y) {
+    var spark = document.createElement('span');
+    spark.className = 'rocket-trail';
+    spark.style.left = x + 'px';
+    spark.style.top = y + 'px';
+    document.body.appendChild(spark);
+    spark.addEventListener('animationend', function () { spark.remove(); });
+  }
+
+  function launchRocket(x0, y0, x1, y1, duration, onArrive) {
     var rocket = document.createElement('span');
     rocket.className = 'firework-rocket';
     rocket.style.left = x0 + 'px';
     rocket.style.top = y0 + 'px';
     rocket.style.setProperty('--rise', (y1 - y0) + 'px');
-    rocket.style.animationDuration = '550ms';
+    rocket.style.animationDuration = duration + 'ms';
     document.body.appendChild(rocket);
+
+    var steps = 7;
+    for (var s = 1; s <= steps; s++) {
+      (function (s) {
+        setTimeout(function () {
+          var f = s / (steps + 1);
+          spawnTrailSpark(x0, y0 + (y1 - y0) * f);
+        }, (duration / (steps + 1)) * s);
+      })(s);
+    }
+
     rocket.addEventListener('animationend', function () {
       rocket.remove();
       onArrive();
     });
   }
 
-  function bigFireworkShow(originX, originY) {
+  function bigFireworkShow(originX) {
     if (reduceMotion) return;
     var vw = window.innerWidth;
     var vh = window.innerHeight;
-    var apexX = vw / 2;
-    var apexY = vh * 0.36;
+    var groundY = vh + 20;
 
     showDim();
 
-    launchRocket(originX, originY, apexX, apexY, function () {
-      heartShapedBurst(apexX, apexY);
-      setTimeout(function () { sparkleBurst(vw * 0.25, vh * 0.28); }, 200);
-      setTimeout(function () { sparkleBurst(vw * 0.75, vh * 0.3); }, 380);
-      setTimeout(function () { sparkleBurst(vw * 0.5, vh * 0.58); }, 600);
-      setTimeout(hideDim, 2100);
+    launchRocket(originX, groundY, vw * 0.5, vh * 0.34, 820, function () {
+      heartShapedBurst(vw * 0.5, vh * 0.34);
     });
+
+    setTimeout(function () {
+      launchRocket(vw * 0.2, groundY, vw * 0.2, vh * 0.44, 700, function () {
+        sparkleBurst(vw * 0.2, vh * 0.44);
+      });
+    }, 200);
+
+    setTimeout(function () {
+      launchRocket(vw * 0.8, groundY, vw * 0.8, vh * 0.4, 700, function () {
+        sparkleBurst(vw * 0.8, vh * 0.4);
+      });
+    }, 380);
+
+    setTimeout(function () {
+      launchRocket(vw * 0.5, groundY, vw * 0.5, vh * 0.62, 620, function () {
+        sparkleBurst(vw * 0.5, vh * 0.62);
+      });
+    }, 950);
+
+    setTimeout(hideDim, 3200);
   }
 
   if (scrollBtn && cerita) {
     scrollBtn.addEventListener('click', function () {
       var rect = scrollBtn.getBoundingClientRect();
-      bigFireworkShow(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      bigFireworkShow(rect.left + rect.width / 2);
       cerita.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
