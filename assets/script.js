@@ -7,7 +7,7 @@
   if (inline) inline.textContent = diff;
 
   var navPill = document.getElementById('navDayPill');
-  if (navPill) navPill.textContent = 'hari ke ' + diff;
+  if (navPill) navPill.textContent = 'day ' + diff;
 })();
 
 (function () {
@@ -40,7 +40,6 @@
     lightboxImg.src = card.getAttribute('data-img');
     lightboxImg.alt = card.getAttribute('data-alt') || '';
     lightboxCaption.innerHTML = card.getAttribute('data-caption') || '';
-    lightbox.classList.toggle('lightbox-decor', card.getAttribute('data-decor') === 'true');
     lightbox.classList.add('is-open');
     lightbox.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
