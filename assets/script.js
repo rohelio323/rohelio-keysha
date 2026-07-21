@@ -23,11 +23,98 @@
 
   var scrollBtn = document.getElementById('scrollNextBtn');
   var cerita = document.getElementById('cerita');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var heartColors = ['#ff5a45', '#e8a0b4', '#e8a93a', '#ff8a75'];
+
+  function makeParticle(cx, cy, tx, ty, size, color, duration, delay) {
+    var particle = document.createElement('span');
+    particle.className = 'heart-particle';
+    particle.style.setProperty('--tx', tx + 'px');
+    particle.style.setProperty('--ty', ty + 'px');
+    particle.style.left = cx + 'px';
+    particle.style.top = cy + 'px';
+    particle.style.color = color;
+    particle.style.animationDuration = duration + 'ms';
+    particle.style.animationDelay = delay + 'ms';
+    particle.innerHTML =
+      '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '">' +
+      '<path d="M12 21s-7.5-4.6-10-9.2C.6 8.3 2.7 5 6.1 5c1.9 0 3.4 1 5.9 3.4C14.5 6 16 5 17.9 5c3.4 0 5.5 3.3 4.1 6.8C19.5 16.4 12 21 12 21z" fill="currentColor"/>' +
+      '</svg>';
+    document.body.appendChild(particle);
+    particle.addEventListener('animationend', function () { particle.remove(); });
+  }
+
+  // Particles travel outward tracing a heart-curve silhouette, like a
+  // heart-shaped firework shell blooming across the screen.
+  function heartShapedBurst(cx, cy) {
+    var count = 56;
+    var reach = Math.min(window.innerWidth, window.innerHeight) * 0.42;
+    var scale = reach / 17;
+    for (var i = 0; i < count; i++) {
+      var t = (Math.PI * 2 * i) / count;
+      var hx = 16 * Math.pow(Math.sin(t), 3);
+      var hy = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      var tx = hx * scale;
+      var ty = -hy * scale;
+      var size = 12 + Math.random() * 12;
+      var color = heartColors[i % heartColors.length];
+      var duration = 1500 + Math.random() * 500;
+      var delay = i * 9;
+      makeParticle(cx, cy, tx, ty, size, color, duration, delay);
+    }
+  }
+
+  function sparkleBurst(cx, cy) {
+    var count = 20;
+    var reach = 60 + Math.random() * 70;
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var distance = reach * (0.5 + Math.random() * 0.5);
+      var tx = Math.cos(angle) * distance;
+      var ty = Math.sin(angle) * distance;
+      var size = 8 + Math.random() * 8;
+      var color = heartColors[i % heartColors.length];
+      var duration = 900 + Math.random() * 400;
+      makeParticle(cx, cy, tx, ty, size, color, duration, 0);
+    }
+  }
+
+  function bigFireworkShow() {
+    if (reduceMotion) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+
+    heartShapedBurst(vw / 2, vh * 0.42);
+
+    setTimeout(function () { sparkleBurst(vw * 0.25, vh * 0.3); }, 250);
+    setTimeout(function () { sparkleBurst(vw * 0.75, vh * 0.32); }, 450);
+    setTimeout(function () { sparkleBurst(vw * 0.5, vh * 0.62); }, 700);
+  }
+
   if (scrollBtn && cerita) {
     scrollBtn.addEventListener('click', function () {
+      bigFireworkShow();
       cerita.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
+})();
+
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var reveals = document.querySelectorAll('.reveal');
+  if (!reveals.length) return;
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(function (el) { observer.observe(el); });
 })();
 
 (function () {

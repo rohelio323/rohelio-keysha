@@ -335,6 +335,28 @@ h1, h2 {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(3px); }
 }
+.scroll-hint {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: 3.4rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--font-note);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #fff8f2;
+  text-shadow: 0 2px 8px rgba(33, 20, 12, 0.35);
+  white-space: nowrap;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-hint { animation: hint-bounce 1.8s ease-in-out infinite; }
+}
+@keyframes hint-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-5px); }
+}
 
 .panel-right {
   position: absolute;
@@ -684,6 +706,38 @@ section { padding-block: clamp(3rem, 7vw, 5.5rem); }
   text-transform: uppercase;
   color: #ffd9cf;
   margin-top: 0.2rem;
+}
+
+/* ---------- Scroll-reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- Heart-burst firework ---------- */
+.heart-particle {
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation-name: heart-burst;
+  animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1);
+  animation-fill-mode: forwards;
+}
+.heart-particle svg { display: block; filter: drop-shadow(0 0 4px currentColor); }
+@keyframes heart-burst {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1); opacity: 0; }
 }
 
 /* ---------- Footer ---------- */
