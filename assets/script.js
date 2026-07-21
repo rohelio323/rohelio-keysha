@@ -80,21 +80,46 @@
     }
   }
 
-  function bigFireworkShow() {
+  var fireworkDim = document.getElementById('fireworkDim');
+  function showDim() { if (fireworkDim) fireworkDim.classList.add('is-active'); }
+  function hideDim() { if (fireworkDim) fireworkDim.classList.remove('is-active'); }
+
+  function launchRocket(x0, y0, x1, y1, onArrive) {
+    var rocket = document.createElement('span');
+    rocket.className = 'firework-rocket';
+    rocket.style.left = x0 + 'px';
+    rocket.style.top = y0 + 'px';
+    rocket.style.setProperty('--rise', (y1 - y0) + 'px');
+    rocket.style.animationDuration = '550ms';
+    document.body.appendChild(rocket);
+    rocket.addEventListener('animationend', function () {
+      rocket.remove();
+      onArrive();
+    });
+  }
+
+  function bigFireworkShow(originX, originY) {
     if (reduceMotion) return;
     var vw = window.innerWidth;
     var vh = window.innerHeight;
+    var apexX = vw / 2;
+    var apexY = vh * 0.36;
 
-    heartShapedBurst(vw / 2, vh * 0.42);
+    showDim();
 
-    setTimeout(function () { sparkleBurst(vw * 0.25, vh * 0.3); }, 250);
-    setTimeout(function () { sparkleBurst(vw * 0.75, vh * 0.32); }, 450);
-    setTimeout(function () { sparkleBurst(vw * 0.5, vh * 0.62); }, 700);
+    launchRocket(originX, originY, apexX, apexY, function () {
+      heartShapedBurst(apexX, apexY);
+      setTimeout(function () { sparkleBurst(vw * 0.25, vh * 0.28); }, 200);
+      setTimeout(function () { sparkleBurst(vw * 0.75, vh * 0.3); }, 380);
+      setTimeout(function () { sparkleBurst(vw * 0.5, vh * 0.58); }, 600);
+      setTimeout(hideDim, 2100);
+    });
   }
 
   if (scrollBtn && cerita) {
     scrollBtn.addEventListener('click', function () {
-      bigFireworkShow();
+      var rect = scrollBtn.getBoundingClientRect();
+      bigFireworkShow(rect.left + rect.width / 2, rect.top + rect.height / 2);
       cerita.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
