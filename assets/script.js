@@ -50,9 +50,10 @@
 
   // Particles travel outward tracing a heart-curve silhouette, like a
   // heart-shaped firework shell blooming across the screen.
-  function heartShapedBurst(cx, cy) {
-    var count = 56;
-    var reach = Math.min(window.innerWidth, window.innerHeight) * 0.42;
+  function heartShapedBurst(cx, cy, sizeMult) {
+    sizeMult = sizeMult || 1;
+    var count = Math.round(64 * sizeMult);
+    var reach = Math.min(window.innerWidth, window.innerHeight) * 0.42 * sizeMult;
     var scale = reach / 17;
     for (var i = 0; i < count; i++) {
       var t = (Math.PI * 2 * i) / count;
@@ -68,9 +69,9 @@
     }
   }
 
-  function sparkleBurst(cx, cy) {
-    var count = 20;
-    var reach = 60 + Math.random() * 70;
+  function sparkleBurst(cx, cy, big) {
+    var count = big ? 34 : 22;
+    var reach = (big ? 110 : 65) + Math.random() * 70;
     for (var i = 0; i < count; i++) {
       var angle = Math.random() * Math.PI * 2;
       var distance = reach * (0.5 + Math.random() * 0.5);
@@ -78,7 +79,7 @@
       var ty = Math.sin(angle) * distance;
       var size = 8 + Math.random() * 8;
       var color = heartColors[i % heartColors.length];
-      var duration = 900 + Math.random() * 400;
+      var duration = 900 + Math.random() * 500;
       makeParticle(cx, cy, tx, ty, size, color, duration, 0);
     }
   }
@@ -121,6 +122,16 @@
     });
   }
 
+  function shellAt(vw, vh, groundY, x, y, duration, delay, big) {
+    setTimeout(function () {
+      launchRocket(vw * x, groundY, vw * x, vh * y, duration, function () {
+        sparkleBurst(vw * x, vh * y, big);
+      });
+    }, delay);
+  }
+
+  // A full hanabi-style show: an opening shell, a long volley of shells
+  // launching from all across the sky, and a heart-shaped double finale.
   function bigFireworkShow(originX) {
     if (reduceMotion) return;
     var vw = window.innerWidth;
@@ -129,29 +140,41 @@
 
     showDim();
 
-    launchRocket(originX, groundY, vw * 0.5, vh * 0.34, 820, function () {
-      heartShapedBurst(vw * 0.5, vh * 0.34);
+    // Opening shell, straight up from where she clicked.
+    launchRocket(originX, groundY, vw * 0.5, vh * 0.3, 780, function () {
+      heartShapedBurst(vw * 0.5, vh * 0.3, 1.1);
     });
 
-    setTimeout(function () {
-      launchRocket(vw * 0.2, groundY, vw * 0.2, vh * 0.44, 700, function () {
-        sparkleBurst(vw * 0.2, vh * 0.44);
-      });
-    }, 200);
+    // A steady volley across the whole width of the sky.
+    var volley = [
+      { x: 0.12, y: 0.46, delay: 220, dur: 760 },
+      { x: 0.88, y: 0.4, delay: 380, dur: 800 },
+      { x: 0.28, y: 0.56, delay: 620, dur: 700, big: true },
+      { x: 0.7, y: 0.5, delay: 780, dur: 720 },
+      { x: 0.5, y: 0.62, delay: 1050, dur: 660 },
+      { x: 0.18, y: 0.32, delay: 1300, dur: 800 },
+      { x: 0.82, y: 0.3, delay: 1450, dur: 820, big: true },
+      { x: 0.4, y: 0.44, delay: 1700, dur: 720 },
+      { x: 0.6, y: 0.38, delay: 1850, dur: 740 },
+      { x: 0.5, y: 0.5, delay: 2100, dur: 700, big: true }
+    ];
+    volley.forEach(function (shell) {
+      shellAt(vw, vh, groundY, shell.x, shell.y, shell.dur, shell.delay, shell.big);
+    });
 
+    // Grand finale: two hearts blooming side by side.
     setTimeout(function () {
-      launchRocket(vw * 0.8, groundY, vw * 0.8, vh * 0.4, 700, function () {
-        sparkleBurst(vw * 0.8, vh * 0.4);
+      launchRocket(vw * 0.5, groundY, vw * 0.36, vh * 0.28, 750, function () {
+        heartShapedBurst(vw * 0.36, vh * 0.28, 0.85);
       });
-    }, 380);
-
+    }, 2450);
     setTimeout(function () {
-      launchRocket(vw * 0.5, groundY, vw * 0.5, vh * 0.62, 620, function () {
-        sparkleBurst(vw * 0.5, vh * 0.62);
+      launchRocket(vw * 0.5, groundY, vw * 0.64, vh * 0.28, 750, function () {
+        heartShapedBurst(vw * 0.64, vh * 0.28, 0.85);
       });
-    }, 950);
+    }, 2600);
 
-    setTimeout(hideDim, 3200);
+    setTimeout(hideDim, 4600);
   }
 
   if (scrollBtn && cerita) {
