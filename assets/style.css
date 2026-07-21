@@ -674,6 +674,122 @@ section { padding-block: clamp(3rem, 7vw, 5.5rem); }
   .lightbox-text { padding: 1.5rem; }
 }
 
+/* ---------- Instagram-style profile ---------- */
+.ig-profile {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.ig-profile.is-open { display: flex; }
+.ig-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 12, 8, 0.72);
+}
+.ig-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--paper-card);
+  border-radius: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  box-shadow: var(--shadow);
+}
+.ig-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.ig-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 2rem);
+}
+.ig-avatar {
+  flex: none;
+  width: clamp(5rem, 14vw, 6.5rem);
+  height: clamp(5rem, 14vw, 6.5rem);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--coral);
+  box-shadow: var(--shadow);
+}
+.ig-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.ig-info { min-width: 0; }
+.ig-username {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.ig-stats {
+  display: flex;
+  gap: clamp(1rem, 4vw, 1.75rem);
+  margin-top: 0.6rem;
+}
+.ig-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+.ig-stat strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+.ig-stat span {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ig-bio {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  margin-top: clamp(1.5rem, 4vw, 2rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1.25rem, 4vw, 1.75rem);
+}
+.ig-post {
+  font: inherit;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  transition: transform 0.15s ease;
+}
+.ig-post:hover { transform: scale(0.97); }
+.ig-post img { width: 100%; height: 100%; object-fit: cover; }
+
 /* ---------- Love note ---------- */
 .note-band {
   background: linear-gradient(180deg, var(--coral) 0%, var(--coral-ink) 100%);

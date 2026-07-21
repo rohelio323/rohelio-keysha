@@ -8,6 +8,9 @@
 
   var navPill = document.getElementById('navDayPill');
   if (navPill) navPill.textContent = 'day ' + diff;
+
+  var igDayCount = document.getElementById('igDayCount');
+  if (igDayCount) igDayCount.textContent = diff;
 })();
 
 (function () {
@@ -208,5 +211,33 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeLightbox();
+  });
+})();
+
+(function () {
+  var profileBtn = document.getElementById('profileBtn');
+  var igProfile = document.getElementById('igProfile');
+  if (!profileBtn || !igProfile) return;
+
+  function openProfile() {
+    igProfile.classList.add('is-open');
+    igProfile.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProfile() {
+    igProfile.classList.remove('is-open');
+    igProfile.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  profileBtn.addEventListener('click', openProfile);
+
+  igProfile.querySelectorAll('[data-close]').forEach(function (el) {
+    el.addEventListener('click', closeProfile);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeProfile();
   });
 })();
