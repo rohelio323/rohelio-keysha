@@ -221,11 +221,17 @@
 <audio id="fireworkAudio" preload="auto" src="assets/audio/fireworks-dub.mp4"></audio>
 
 <div class="listen-modal" id="listenModal" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="listen-photo" id="listenPhoto"></div>
+  <div class="listen-photo-stage" id="listenPhotoStage"></div>
   <div class="listen-scrim"></div>
   <div class="listen-aurora" id="listenAurora"></div>
   <button type="button" class="listen-close" data-close-listen aria-label="Tutup">&times;</button>
-  <div class="listen-content">
+
+  <div class="listen-content" id="listenIntro">
+    <p class="listen-warning">&#9888;&#65039; pastiin kamu lagi sendirian &amp; pake headphone yaa</p>
+    <button type="button" class="listen-start" id="listenStartBtn">Mulai <span aria-hidden="true">&#9658;</span></button>
+  </div>
+
+  <div class="listen-content is-hidden" id="listenPlaying">
     <p class="listen-message">dengerin saat kamu sendiri yaaa sayangku <span class="listen-heart">&#10084;&#65039;</span></p>
   </div>
 </div>

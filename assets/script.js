@@ -388,7 +388,49 @@
   var modal = document.getElementById('listenModal');
   var aurora = document.getElementById('listenAurora');
   var audio = document.getElementById('listenAudio');
+  var stage = document.getElementById('listenPhotoStage');
+  var introView = document.getElementById('listenIntro');
+  var playingView = document.getElementById('listenPlaying');
+  var startBtn = document.getElementById('listenStartBtn');
   if (!trigger || !modal) return;
+
+  var photos = [
+    'assets/images/gallery-1.jpg',
+    'assets/images/gallery-2.jpg',
+    'assets/images/gallery-3.jpg',
+    'assets/images/gallery-4.jpg',
+    'assets/images/gallery-5.jpg',
+    'assets/images/gallery-6.jpg',
+    'assets/images/throwback.jpg',
+    'assets/images/keysha-hero.png'
+  ];
+  var slideEls = [];
+  var slideIndex = 0;
+  var slideTimer = null;
+
+  if (stage) {
+    photos.forEach(function (src, i) {
+      var img = document.createElement('img');
+      img.className = 'listen-photo-slide';
+      img.src = src;
+      img.alt = '';
+      if (i === 0) img.classList.add('is-active');
+      stage.appendChild(img);
+      slideEls.push(img);
+    });
+  }
+
+  function startSlideshow() {
+    if (slideTimer || !slideEls.length) return;
+    slideTimer = setInterval(function () {
+      slideEls[slideIndex].classList.remove('is-active');
+      slideIndex = (slideIndex + 1) % slideEls.length;
+      slideEls[slideIndex].classList.add('is-active');
+    }, 3600);
+  }
+  function stopSlideshow() {
+    if (slideTimer) { clearInterval(slideTimer); slideTimer = null; }
+  }
 
   var destroyAurora = null;
 
@@ -396,6 +438,8 @@
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    if (introView) introView.classList.remove('is-hidden');
+    if (playingView) playingView.classList.add('is-hidden');
 
     if (aurora && window.LightPillar && !destroyAurora) {
       destroyAurora = window.LightPillar.create(aurora, {
@@ -412,6 +456,12 @@
       });
     }
 
+    startSlideshow();
+  }
+
+  function beginPlayback() {
+    if (introView) introView.classList.add('is-hidden');
+    if (playingView) playingView.classList.remove('is-hidden');
     if (audio) {
       try {
         audio.currentTime = 0;
@@ -426,12 +476,14 @@
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     if (audio) { audio.pause(); audio.currentTime = 0; }
+    stopSlideshow();
     setTimeout(function () {
       if (destroyAurora) { destroyAurora(); destroyAurora = null; }
     }, 500);
   }
 
   trigger.addEventListener('click', openModal);
+  if (startBtn) startBtn.addEventListener('click', beginPlayback);
 
   modal.querySelectorAll('[data-close-listen]').forEach(function (el) {
     el.addEventListener('click', closeModal);
