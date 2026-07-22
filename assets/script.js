@@ -85,8 +85,32 @@
   }
 
   var fireworkDim = document.getElementById('fireworkDim');
-  function showDim() { if (fireworkDim) fireworkDim.classList.add('is-active'); }
-  function hideDim() { if (fireworkDim) fireworkDim.classList.remove('is-active'); }
+  var fireworkAurora = document.getElementById('fireworkAurora');
+  var destroyAurora = null;
+  function showDim() {
+    if (fireworkDim) fireworkDim.classList.add('is-active');
+    if (fireworkAurora && window.LightPillar && !destroyAurora) {
+      fireworkAurora.classList.add('is-active');
+      destroyAurora = window.LightPillar.create(fireworkAurora, {
+        topColor: '#5227FF',
+        bottomColor: '#FF9FFC',
+        intensity: 1.1,
+        rotationSpeed: 0.4,
+        glowAmount: 0.006,
+        pillarWidth: 3.4,
+        pillarHeight: 0.45,
+        noiseIntensity: 0.4,
+        quality: 'medium'
+      });
+    }
+  }
+  function hideDim() {
+    if (fireworkDim) fireworkDim.classList.remove('is-active');
+    if (fireworkAurora) fireworkAurora.classList.remove('is-active');
+    setTimeout(function () {
+      if (destroyAurora) { destroyAurora(); destroyAurora = null; }
+    }, 600);
+  }
 
   var fireworkAudio = document.getElementById('fireworkAudio');
   function playFireworkAudio() {

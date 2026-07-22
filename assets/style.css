@@ -819,12 +819,22 @@ section { padding-block: clamp(3rem, 7vw, 5.5rem); }
   position: fixed;
   inset: 0;
   z-index: 400;
-  background: rgba(10, 6, 4, 0.6);
+  background: rgba(6, 7, 14, 0.86);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
 }
 .firework-dim.is-active { opacity: 1; }
+
+.firework-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 405;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.firework-aurora.is-active { opacity: 1; }
 
 .firework-countdown {
   display: none;
