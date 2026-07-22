@@ -31,6 +31,9 @@
       <button type="button" class="nav-avatar" id="profileBtn" aria-label="Lihat profil">
         <img src="assets/images/gallery-5.jpg" alt="Rohelio dan Keysha" />
       </button>
+      <button type="button" class="nav-listen" id="listenTriggerBtn" aria-label="Dengerin pesan">
+        <span aria-hidden="true">&#127911;</span>
+      </button>
     </div>
   </div>
 </header>
@@ -191,6 +194,10 @@
 
   <section id="surat">
     <div class="note-band reveal">
+      <div class="note-polaroid">
+        <img src="assets/images/rohelio-avatar.png" alt="Rohelio" />
+        <p class="note-polaroid-caption">it's me, hehe</p>
+      </div>
       <p class="eyebrow">a little message</p>
       <h2>For Nadiva Keysha Evelin</h2>
       <p class="note-body">Ini web kecil-kecilan yang aku buat khusus buat kamu. Nggak ada yang spesial, cuma tempat nyimpen kita, biar kalau suatu saat kita lupa hari ini rasanya kayak apa, tinggal buka link ini aja. Makasih udah jadi key yang sekarang dan congrats buat pencapaian kamu sekarang udah wow, and i just wanna say THANKSSSSSS, im very proud of you and i love you</p>
@@ -212,6 +219,17 @@
 </div>
 
 <audio id="fireworkAudio" preload="auto" src="assets/audio/fireworks-dub.mp4"></audio>
+
+<div class="listen-modal" id="listenModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="listen-photo" id="listenPhoto"></div>
+  <div class="listen-scrim"></div>
+  <div class="listen-aurora" id="listenAurora"></div>
+  <button type="button" class="listen-close" data-close-listen aria-label="Tutup">&times;</button>
+  <div class="listen-content">
+    <p class="listen-message">dengerin saat kamu sendiri yaaa sayangku <span class="listen-heart">&#10084;&#65039;</span></p>
+  </div>
+</div>
+<audio id="listenAudio" preload="auto" src="assets/audio/listen-alone.mp4"></audio>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="lightbox-backdrop" data-close></div>

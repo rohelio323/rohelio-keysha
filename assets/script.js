@@ -382,3 +382,62 @@
     if (e.key === 'Escape') closeProfile();
   });
 })();
+
+(function () {
+  var trigger = document.getElementById('listenTriggerBtn');
+  var modal = document.getElementById('listenModal');
+  var aurora = document.getElementById('listenAurora');
+  var audio = document.getElementById('listenAudio');
+  if (!trigger || !modal) return;
+
+  var destroyAurora = null;
+
+  function openModal() {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    if (aurora && window.LightPillar && !destroyAurora) {
+      destroyAurora = window.LightPillar.create(aurora, {
+        topColor: '#5227FF',
+        bottomColor: '#FF9FFC',
+        intensity: 0.7,
+        rotationSpeed: 0.35,
+        glowAmount: 0.0045,
+        pillarWidth: 9.5,
+        pillarHeight: 0.45,
+        pillarRotation: 90,
+        noiseIntensity: 0.35,
+        quality: 'medium'
+      });
+    }
+
+    if (audio) {
+      try {
+        audio.currentTime = 0;
+        var p = audio.play();
+        if (p && p.catch) p.catch(function () {});
+      } catch (e) {}
+    }
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+    setTimeout(function () {
+      if (destroyAurora) { destroyAurora(); destroyAurora = null; }
+    }, 500);
+  }
+
+  trigger.addEventListener('click', openModal);
+
+  modal.querySelectorAll('[data-close-listen]').forEach(function (el) {
+    el.addEventListener('click', closeModal);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+})();
