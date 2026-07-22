@@ -94,11 +94,12 @@
       destroyAurora = window.LightPillar.create(fireworkAurora, {
         topColor: '#5227FF',
         bottomColor: '#FF9FFC',
-        intensity: 1.1,
+        intensity: 0.6,
         rotationSpeed: 0.4,
-        glowAmount: 0.006,
-        pillarWidth: 3.4,
+        glowAmount: 0.004,
+        pillarWidth: 9.5,
         pillarHeight: 0.45,
+        pillarRotation: 90,
         noiseIntensity: 0.4,
         quality: 'medium'
       });
