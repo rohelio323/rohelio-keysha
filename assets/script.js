@@ -88,6 +88,40 @@
   function showDim() { if (fireworkDim) fireworkDim.classList.add('is-active'); }
   function hideDim() { if (fireworkDim) fireworkDim.classList.remove('is-active'); }
 
+  var fireworkAudio = document.getElementById('fireworkAudio');
+  function playFireworkAudio() {
+    if (!fireworkAudio) return;
+    try {
+      fireworkAudio.currentTime = 0;
+      var p = fireworkAudio.play();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) {}
+  }
+
+  var countdownWrap = document.getElementById('fireworkCountdownWrap');
+  var countdownNumber = document.getElementById('fireworkCountdown');
+  function startCountdown(originX, onDone) {
+    if (!countdownWrap || !countdownNumber) { onDone(); return; }
+    var steps = ['3', '2', '1'];
+    var i = 0;
+    countdownWrap.classList.add('is-active');
+
+    function tick() {
+      if (i < steps.length) {
+        countdownNumber.textContent = steps[i];
+        countdownNumber.classList.remove('pop');
+        void countdownNumber.offsetWidth;
+        countdownNumber.classList.add('pop');
+        i++;
+        setTimeout(tick, 800);
+      } else {
+        countdownWrap.classList.remove('is-active');
+        onDone();
+      }
+    }
+    tick();
+  }
+
   function spawnTrailSpark(x, y) {
     var spark = document.createElement('span');
     spark.className = 'rocket-trail';
@@ -138,8 +172,6 @@
     var vh = window.innerHeight;
     var groundY = vh + 20;
 
-    showDim();
-
     // Opening shell, straight up from where she clicked.
     launchRocket(originX, groundY, vw * 0.5, vh * 0.3, 780, function () {
       heartShapedBurst(vw * 0.5, vh * 0.3, 1.1);
@@ -180,8 +212,17 @@
   if (scrollBtn && cerita) {
     scrollBtn.addEventListener('click', function () {
       var rect = scrollBtn.getBoundingClientRect();
-      bigFireworkShow(rect.left + rect.width / 2);
+      var originX = rect.left + rect.width / 2;
+
       cerita.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (reduceMotion) return;
+
+      showDim();
+      playFireworkAudio();
+      startCountdown(originX, function () {
+        bigFireworkShow(originX);
+      });
     });
   }
 })();

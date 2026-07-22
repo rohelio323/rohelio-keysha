@@ -861,6 +861,35 @@ section { padding-block: clamp(3rem, 7vw, 5.5rem); }
 }
 .firework-dim.is-active { opacity: 1; }
 
+.firework-countdown {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.firework-countdown.is-active { display: flex; }
+.firework-countdown-number {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 22vw, 11rem);
+  line-height: 1;
+  color: #fff8f2;
+  text-shadow: 0 0 40px rgba(255, 90, 69, 0.85), 0 10px 26px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+}
+.firework-countdown-number.pop {
+  animation: countdown-pop 800ms ease-out;
+}
+@keyframes countdown-pop {
+  0% { transform: scale(1.6); opacity: 0; }
+  35% { transform: scale(1); opacity: 1; }
+  75% { opacity: 1; }
+  100% { transform: scale(0.92); opacity: 0; }
+}
+
 .firework-rocket {
   position: fixed;
   z-index: 500;
