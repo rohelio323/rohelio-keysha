@@ -97,12 +97,16 @@
       if (p && p.catch) p.catch(function () {});
     } catch (e) {}
   }
+  // Leading silence in the dub before she says "3" — the on-screen countdown
+  // waits this long before starting so the numbers line up with her voice.
+  var countdownStartDelay = 1600;
 
   var countdownWrap = document.getElementById('fireworkCountdownWrap');
   var countdownNumber = document.getElementById('fireworkCountdown');
   function startCountdown(originX, onDone) {
     if (!countdownWrap || !countdownNumber) { onDone(); return; }
     var steps = ['3', '2', '1'];
+    var stepDelays = [800, 1300, 800]; // ms to wait after showing each number before the next
     var i = 0;
     countdownWrap.classList.add('is-active');
 
@@ -112,8 +116,9 @@
         countdownNumber.classList.remove('pop');
         void countdownNumber.offsetWidth;
         countdownNumber.classList.add('pop');
+        var delay = stepDelays[i];
         i++;
-        setTimeout(tick, 800);
+        setTimeout(tick, delay);
       } else {
         countdownWrap.classList.remove('is-active');
         onDone();
@@ -220,10 +225,57 @@
 
       showDim();
       playFireworkAudio();
-      startCountdown(originX, function () {
-        bigFireworkShow(originX);
-      });
+      setTimeout(function () {
+        startCountdown(originX, function () {
+          bigFireworkShow(originX);
+        });
+      }, countdownStartDelay);
     });
+  }
+})();
+
+(function () {
+  var bg = document.getElementById('lightPillarBg');
+  var heroPage = document.getElementById('heroPage');
+  if (!bg || !heroPage || !window.LightPillar) return;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  var destroy = null;
+  function mount() {
+    if (destroy) return;
+    destroy = window.LightPillar.create(bg, {
+      topColor: '#f0b4c6',
+      bottomColor: '#ff7a63',
+      intensity: 0.55,
+      rotationSpeed: 0.2,
+      glowAmount: 0.004,
+      pillarWidth: 3.2,
+      pillarHeight: 0.4,
+      noiseIntensity: 0.35,
+      quality: 'medium'
+    });
+  }
+  function unmount() {
+    if (destroy) { destroy(); destroy = null; }
+  }
+
+  if ('IntersectionObserver' in window) {
+    var pillarObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          bg.classList.remove('is-visible');
+          unmount();
+        } else {
+          bg.classList.add('is-visible');
+          mount();
+        }
+      });
+    }, { threshold: 0.05 });
+    pillarObserver.observe(heroPage);
+  } else {
+    bg.classList.add('is-visible');
+    mount();
   }
 })();
 
